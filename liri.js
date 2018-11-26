@@ -1,21 +1,20 @@
+require("dotenv").config();
 var fs = require("fs");
 var request = require("request");
+var spotifyKeys = require("./keys.js").spotify;
 var Spotify = require('node-spotify-api');
-var keys = require("./keys.js");
 var inquirer = require("inquirer");
+console.log(spotifyKeys);
 
 var choice = process.argv[2];
 var firstinput = process.argv[3];
 
-var spotify = new Spotify({
-  id: process.env.SPOTIFY_ID,
-  secret: process.env.SPOTIFY_SECRET
-});
+console.log("hi")
 
-var client = Spotify({
-  id: keys.spotify.id,
-  secret: keys.spotify.secret,
-})
+var spotify = new Spotify({
+  id: spotifyKeys.id,
+  secret: spotifyKeys.secret
+});
 
 
 inquirer.prompt([
@@ -34,12 +33,12 @@ inquirer.prompt([
     {
         type: "input",
         message: "What Song would you like to search for?",
-        name: "song"
+        name: "track"
     }
 
 ]).then(function (response) {
   console.log(response.track)
-  var firstinput=response.track;
+  let firstinput = response.track;
   var songtrack;
 
   if (firstinput === false) {
@@ -123,12 +122,11 @@ else if  (pick.methods == "movie-this") {
   })
 })
 }
-else if (select.selections == "do-what-it-says") {
+else if (pick.methods == "do-what-it-says") {
   fs.readFile('random.txt', "utf8", function(error, data){
     var text = data.split(',');
     console.log(text);
-    spotify.search({ type: 'track', query:txt[1]}, function (err, data) {
-    
+    Spotify.search({ type: 'track', query:text[1]}, function (err, data) {
       if (err) {
         return console.log(err);
       }
